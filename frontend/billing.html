@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>New Bill - Office Canteen</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .menu-item-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .menu-item-card:active {
+            transform: scale(0.98);
+        }
+        .menu-item-card.active-item {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(15, 82, 58, 0.2);
+        }
+        .menu-item-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .menu-item-details {
+            padding: 0.75rem;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .cart-qty-ctrl {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-color);
+            border-radius: var(--radius-sm);
+            padding: 0.25rem;
+        }
+        .qty-btn {
+            background: none;
+            border: none;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--primary);
+            border-radius: 4px;
+        }
+        .qty-btn:active {
+            background: rgba(0,0,0,0.05);
+        }
+        
+        .sticky-summary {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: var(--bg-color);
+            padding-bottom: 1rem;
+            margin-top: -1rem;
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="top-bar flex justify-between items-center">
+            <h1>
+                <svg fill="currentColor" viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M4 19h16v2H4v-2zm12-4H8V7H4V5h16v2h-4v8zm-2-8h-4v6h4V7z"/></svg>
+                New Bill
+            </h1>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </div>
+
+        <div class="content-area">
+            <!-- Step 1: Employee Selection -->
+            <div id="step1">
+                <div class="form-group mb-6">
+                    <label class="form-label text-muted font-bold text-xs text-uppercase" style="letter-spacing:0.05em">Select Client</label>
+                    <div style="position:relative;">
+                        <svg style="position: absolute; left: 12px; top: 12px; width: 20px; height: 20px; color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input type="text" id="employeeSearch" class="form-control" style="padding-left: 2.5rem; height: 48px; border-radius: 12px;" placeholder="Search name or number...">
+                    </div>
+                </div>
+                <div id="employeeList">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Step 2: Billing & Cart -->
+            <div id="step2" style="display: none;">
+                <div class="sticky-summary">
+                    <div class="card" style="background: var(--primary); color: white; border:none; box-shadow: 0 4px 15px rgba(15,82,58,0.2); padding: 1rem;">
+                        <div class="flex justify-between items-start mb-3" style="border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.75rem;">
+                            <div class="flex items-center gap-3">
+                                <div style="width:40px; height:40px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                                    <svg style="width:20px;height:20px;color:white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-base" id="selectedEmployeeName"></div>
+                                    <div style="font-size: 0.75rem; opacity: 0.8;" id="selectedEmployeeId"></div>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="color: white; border-color: rgba(255,255,255,0.3); padding: 0.25rem 0.75rem; width: auto; font-size: 0.8rem;" onclick="resetBilling()">Change</button>
+                        </div>
+                        <div class="flex justify-between" style="font-size: 0.85rem; opacity: 0.9;">
+                            <span>Previous Balance</span>
+                            <span class="font-bold" id="prevBalanceDisplay">₹0</span>
+                        </div>
+                        <div class="flex justify-between mt-1" style="font-size: 0.85rem; opacity: 0.9;">
+                            <span>Today's Bill</span>
+                            <span class="font-bold" id="currentBillDisplay">₹0</span>
+                        </div>
+                        <div class="flex justify-between mt-2 pt-2" style="font-size: 1.1rem; border-top: 1px dashed rgba(255,255,255,0.3);">
+                            <span class="font-bold">Total Payable</span>
+                            <span class="font-bold" id="totalPayableDisplay">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-lg">Menu</h2>
+                </div>
+                <div class="menu-grid mb-6" id="menuGrid">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <div class="card mb-6" style="border: none; box-shadow: var(--shadow-md);">
+                    <h2 class="font-bold text-lg mb-3" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Cart</h2>
+                    <div id="cartItems">
+                        <div class="text-center text-muted py-6">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 48px; height: 48px; margin: 0 auto 0.5rem; opacity: 0.5;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                            Cart is empty
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 pt-4" style="border-top: 2px dashed var(--border-color);">
+                        <span class="font-bold text-muted">Total Payable</span>
+                        <span class="font-bold text-2xl text-primary" id="cartTotal">₹0</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="generateBillBtn" style="height: 56px; font-size: 1.1rem; border-radius: var(--radius-lg); box-shadow: 0 4px 12px rgba(15,82,58,0.25);">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height:20px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Record Consumption
+                </button>
+            </div>
+            
+            <!-- Step 3: Success -->
+            <div id="step3" style="display: none; text-align: center; padding: 3rem 0;">
+                <div style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.15); color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 40px; height: 40px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Bill Generated!</h2>
+                <p class="font-bold text-primary text-xl mb-6" id="successBillNo"></p>
+                
+                <div class="card mb-6 text-left" style="background: var(--bg-color); border: 1px dashed var(--border-color);">
+                    <div class="flex justify-between mb-3">
+                        <span class="text-muted font-medium">Today's Bill:</span>
+                        <span class="font-bold text-lg" id="successTotal"></span>
+                    </div>
+                    <div class="flex justify-between pt-2 mt-2" style="border-top: 1px solid var(--border-color);">
+                        <span class="text-muted font-medium">New Account Balance:</span>
+                        <span class="font-bold text-danger text-lg" id="successNewBalance"></span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button class="btn btn-primary" style="height:50px" onclick="resetBilling(true)">Create New Bill</button>
+                    <a href="dashboard.html" class="btn btn-outline" style="height:50px">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Home
+            </a>
+            <a href="billing.html" class="nav-item active">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Bill
+            </a>
+            <a href="employees.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Clients
+            </a>
+            <a href="reports.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                Reports
+            </a>
+            <a href="whatsapp.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                WA
+            </a>
+        </nav>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/billing.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settle Payment - Office Canteen</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .qr-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin: 0 auto 2rem;
+            display: inline-block;
+            border: 2px solid var(--primary);
+        }
+        .qr-container img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="top-bar flex justify-between items-center" style="position: sticky; top: 0; z-index: 50;">
+            <a href="#" id="backBtn" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:20px;height:20px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                Back
+            </a>
+            <h1 style="font-size: 1rem; margin: 0; text-align: center; flex: 1;">Make Payment</h1>
+            <div style="width: 60px;"></div> <!-- spacer -->
+        </div>
+
+        <div class="content-area text-center pt-6">
+            <h2 class="font-bold text-xl mb-1" id="clientName">Loading...</h2>
+            <p class="text-muted mb-6">Total Due: <span class="font-bold text-danger text-lg" id="totalDue">₹0</span></p>
+
+            <div class="qr-container" style="display: none;">
+                <img src="assets/images/qr_code.png" alt="UPI QR Code">
+                <p class="text-xs text-muted mt-3 font-bold text-uppercase" style="letter-spacing: 0.05em;">Scan to Pay via UPI</p>
+            </div>
+
+            <form id="paymentForm" class="text-left">
+                <input type="hidden" id="empId">
+                
+                <div class="card mb-6" style="border:none; box-shadow: var(--shadow-sm);">
+                    <div class="form-group mb-4">
+                        <label class="form-label text-muted font-bold text-xs text-uppercase" style="letter-spacing:0.05em">Payment Amount (₹)</label>
+                        <input type="number" id="payAmount" class="form-control font-bold text-lg" required min="1" placeholder="Enter amount..." style="height: 56px; border-radius: 12px;">
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        <label class="form-label text-muted font-bold text-xs text-uppercase" style="letter-spacing:0.05em">Payment Method</label>
+                        <select id="payMethod" class="form-control" style="height: 48px; border-radius: 12px;">
+                            <option value="CASH" selected>Cash</option>
+                            <option value="UPI">UPI / Online</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="form-label text-muted font-bold text-xs text-uppercase" style="letter-spacing:0.05em">Note (Optional)</label>
+                        <input type="text" id="payNote" class="form-control" placeholder="e.g. Partial payment" style="border-radius: 12px;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="saveBtn" style="height: 56px; font-size: 1.1rem; border-radius: var(--radius-lg); box-shadow: 0 4px 12px rgba(15,82,58,0.25);">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height:20px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Confirm Payment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/payments.js"></script>
+</body>
+</html>

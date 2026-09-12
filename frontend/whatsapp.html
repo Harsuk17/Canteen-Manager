@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WhatsApp Accounts - Office Canteen</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="top-bar flex justify-between items-center">
+            <h1>
+                <svg fill="currentColor" viewBox="0 0 24 24" style="width:20px;height:20px;"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                WhatsApp Send
+            </h1>
+        </div>
+
+        <div class="content-area">
+            <div class="card mb-4 flex justify-between items-center" style="border: none; box-shadow: var(--shadow-sm);">
+                <label class="form-label mb-0 font-bold" style="margin-bottom:0;">Select Date</label>
+                <input type="date" id="waDate" class="form-control" style="width: auto; padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
+            </div>
+
+            <div class="card mb-4" style="background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--warning); display: flex; align-items: start; gap: 0.5rem;">
+                <svg fill="none" stroke="var(--warning)" viewBox="0 0 24 24" style="width: 24px; height: 24px; flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div style="font-size: 0.8rem; color: var(--text-main);">
+                    Messages are not sent automatically. Clicking the button will open your WhatsApp app with a pre-filled message. You must manually press Send.
+                </div>
+            </div>
+
+            <div id="waList">
+                <p class="text-center text-muted py-6">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:48px;height:48px;margin:0 auto 1rem;opacity:0.3"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Loading data...
+                </p>
+            </div>
+            
+            <div class="mt-4" id="sendAllContainer" style="display: none;">
+                <button class="btn btn-primary" onclick="alert('Please click the WhatsApp button next to each employee to send their message safely.')">How to Send</button>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                Home
+            </a>
+            <a href="billing.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Bill
+            </a>
+            <a href="employees.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                Clients
+            </a>
+            <a href="reports.html" class="nav-item">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                Reports
+            </a>
+            <a href="whatsapp.html" class="nav-item active">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                WA
+            </a>
+        </nav>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal">
+            <h2 id="modalTitle">Message Preview</h2>
+            <div class="card" style="background: #e5ddd5; color: #111; font-family: sans-serif; white-space: pre-wrap; margin-top: 1rem; border-radius: 8px;" id="previewContent"></div>
+            <div class="flex justify-end mt-4 gap-2">
+                <button class="btn btn-outline" style="width:auto;" onclick="closePreview()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/whatsapp.js"></script>
+</body>
+</html>

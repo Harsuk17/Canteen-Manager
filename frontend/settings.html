@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings - Office Canteen</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="top-bar">
+            <div class="flex items-center gap-2">
+                <a href="dashboard.html" style="color: var(--text-muted);">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:24px;height:24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </a>
+                <h1>Settings</h1>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <h2 class="mb-4">WhatsApp Template</h2>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label class="form-label">Template Message</label>
+                    <textarea id="waTemplate" class="form-control" rows="12" style="font-family: monospace; font-size: 0.85rem;"></textarea>
+                    <div class="text-muted mt-2" style="font-size: 0.75rem;">
+                        <strong>Supported placeholders:</strong><br>
+                        {employee_name}, {date}, {items}, {today_total}, {previous_balance}, {current_balance}, {payment_amount}, {payment_status}
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary mt-4" id="saveBtn">Save Settings</button>
+            </form>
+            
+            <h2 class="mt-4 mb-4">About</h2>
+            <div class="card text-center">
+                <p class="font-bold text-primary">Office Canteen</p>
+                <p class="text-muted" style="font-size: 0.85rem;">Version 1.0.0</p>
+                <div class="mt-4 pt-4" style="border-top: 1px solid var(--border-color);">
+                    <p style="font-size: 0.85rem;">Powered by <span class="font-bold">SHP Technology</span></p>
+                    <a href="https://www.shptechnology.online/" target="_blank" style="color: var(--primary); text-decoration: none; font-size: 0.85rem;">www.shptechnology.online</a>
+                </div>
+                <div class="mt-4 pt-4 flex justify-center gap-4 text-muted" style="border-top: 1px solid var(--border-color); font-size: 0.8rem;">
+                    <a href="terms.html" style="color: inherit;">Terms & Conditions</a>
+                    <a href="privacy.html" style="color: inherit;">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>
