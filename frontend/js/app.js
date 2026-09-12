@@ -20,8 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 500);
             } catch (error) {
                 showToast(error.message, 'error');
-                btn.disabled = false;
-                btn.textContent = 'Login';
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Login';
+                }
             }
         });
     }
